@@ -18,14 +18,14 @@ class GithubRepoRepositoryImpl @Inject constructor(
 ) : GithubRepoRepository {
 
     override fun fetchGithubRepos(): Flow<List<GithubRepo>> = flow {
-        val cachedGithubRepoEntities = githubRepoDao.getGithubRepos()
-        if (cachedGithubRepoEntities.isEmpty()) {
+        val cachedGithubRepos = githubRepoDao.getGithubRepos()
+        if (cachedGithubRepos.isEmpty()) {
             val githubRepos = githubApiService.fetchGithubRepos()
             val githubRepositories = githubRepoDtoMapper.mapModelList(githubRepos)
             insertGithubRepos(githubRepos = githubRepositories)
             emit(githubRepoEntityMapper.mapToModelList(githubRepoDao.getGithubRepos()))
         } else {
-            emit(githubRepoEntityMapper.mapToModelList(cachedGithubRepoEntities))
+            emit(githubRepoEntityMapper.mapToModelList(cachedGithubRepos))
         }
     }
 

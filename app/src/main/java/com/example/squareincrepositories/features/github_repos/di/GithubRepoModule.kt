@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.squareincrepositories.BuildConfig
 import com.example.squareincrepositories.features.github_repos.data.local.GithubRepoDatabase
 import com.example.squareincrepositories.features.github_repos.data.remote.GithubApiService
-import com.example.squareincrepositories.features.github_repos.data.remote.interceptor.HttpsInterceptor
 import com.example.squareincrepositories.features.github_repos.data.remote.interceptor.NoInternetInterceptor
 import com.example.squareincrepositories.features.github_repos.data.repository.GithubRepoRepositoryImpl
 import com.example.squareincrepositories.features.github_repos.domain.repository.GithubRepoRepository
@@ -36,7 +35,7 @@ object GithubRepoModule {
     fun provideGithubRepoDatabase(
         @ApplicationContext context: Context
     ): GithubRepoDatabase {
-        return GithubRepoDatabase.createGithubRepoDatabase(context)
+        return GithubRepoDatabase.build(context)
     }
 
     @[Provides Singleton]
@@ -54,7 +53,6 @@ object GithubRepoModule {
         }
 
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpsInterceptor)
             .addInterceptor(NoInternetInterceptor)
             .addInterceptor(httpLoggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)

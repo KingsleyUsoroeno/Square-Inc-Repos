@@ -4,8 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class GithubRepoDto(
     val id: Int,
-    @SerializedName("name")
-    val repoName: String,
+    val name: String,
     @SerializedName("stargazers_count")
     val starCount: Int
 )

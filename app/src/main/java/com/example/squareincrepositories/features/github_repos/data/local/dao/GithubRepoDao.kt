@@ -13,7 +13,7 @@ interface GithubRepoDao {
     @Delete
     suspend fun deleteGithubRepo(githubRepoEntity: GithubRepoEntity)
 
-    @Query("SELECT * FROM GithubRepoEntity WHERE id = :id")
+    @Query("SELECT * FROM GithubRepoEntity WHERE id = :id LIMIT 1")
     suspend fun findGithubRepoById(id: Int): GithubRepoEntity?
 
     @Query("SELECT * FROM GithubRepoEntity")

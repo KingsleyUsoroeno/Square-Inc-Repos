@@ -1,9 +1,6 @@
 package com.example.squareincrepositories.features.github_repos.presentation.github_repo
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -77,11 +74,13 @@ fun RepoScreenDetailItem(
             .padding(horizontal = 20.dp, vertical = 15.dp)
     ) {
         RowTextComposable(title = "Repository Name", desc = githubRepo.name)
+        Spacer(modifier = Modifier.height(6.dp))
         RowTextComposable(title = "Stars Count", desc = githubRepo.starsCount.toString())
 
         if (githubRepo.isBookmarked) {
             Button(
-                onClick = onRemoveBookmark, modifier = Modifier
+                onClick = onRemoveBookmark,
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             ) {
@@ -89,7 +88,8 @@ fun RepoScreenDetailItem(
             }
         } else {
             Button(
-                onClick = onAddBookmark, modifier = Modifier
+                onClick = onAddBookmark,
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             ) {

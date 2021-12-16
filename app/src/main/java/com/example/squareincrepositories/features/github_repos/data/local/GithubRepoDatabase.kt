@@ -13,22 +13,11 @@ abstract class GithubRepoDatabase : RoomDatabase() {
     abstract val githubRepoDao: GithubRepoDao
 
     companion object {
-        @Volatile
-        private lateinit var INSTANCE: GithubRepoDatabase
-
-        fun createGithubRepoDatabase(context: Context): GithubRepoDatabase {
-            if (!this::INSTANCE.isInitialized) {
-                synchronized(this) {
-                    val instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        GithubRepoDatabase::class.java, "github_repos_db"
-                    ).fallbackToDestructiveMigration()
-                        .build()
-                    INSTANCE = instance
-                    return instance
-                }
-            }
-            return INSTANCE
-        }
+        private const val DATABASE_NAME: String = "github_repos_db"
+        fun build(context: Context): GithubRepoDatabase = Room.databaseBuilder(
+            context.applicationContext,
+            GithubRepoDatabase::class.java,
+            DATABASE_NAME
+        ).fallbackToDestructiveMigration().build()
     }
 }
