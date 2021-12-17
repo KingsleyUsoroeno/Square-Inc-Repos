@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -18,6 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
 import com.example.squareincrepositories.R
 import com.example.squareincrepositories.features.github_repos.presentation.Screen.RepositoryDetailScreen
@@ -42,7 +42,12 @@ fun RepoListScreen(
 
         LaunchedEffect(key1 = true) { viewModel.fetchGithubRepos() }
 
-        val uiState by viewModel.uiState.collectAsState(initial = UiState.Idle)
+        val lifecycleOwner = LocalLifecycleOwner.current
+        val flowLifecycleAware = remember(viewModel.uiState, lifecycleOwner) {
+            viewModel.uiState.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+        }
+
+        val uiState by flowLifecycleAware.collectAsState(initial = UiState.Idle)
 
         when (uiState) {
             is UiState.Idle -> {

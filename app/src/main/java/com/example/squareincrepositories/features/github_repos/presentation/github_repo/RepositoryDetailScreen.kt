@@ -5,14 +5,14 @@ import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
 import com.example.squareincrepositories.features.github_repos.domain.model.GithubRepo
 import com.example.squareincrepositories.features.github_repos.presentation.components.RowTextComposable
@@ -42,7 +42,15 @@ fun RepositoryDetailScreen(
 
     Scaffold(scaffoldState = scaffoldState) {
         id?.let {
-            val githubRepo by viewModel.findRepositoryById(it).collectAsState(initial = null)
+
+            val lifecycleOwner = LocalLifecycleOwner.current
+            val flowLifecycleAware = remember(viewModel.findRepositoryById(it), lifecycleOwner) {
+                viewModel.findRepositoryById(it)
+                    .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            }
+
+            val githubRepo by flowLifecycleAware.collectAsState(initial = null)
+
             if (githubRepo == null) {
                 Text(text = "Repository does not exist")
             } else {
